@@ -1,6 +1,6 @@
 """
 Malaysian Condominium Price Predictive Model
-Part 2: Descriptive Analysis + Create ML-Ready Dataset
+Part 2: Descriptive Analysis + CSV Report Generation
 """
 
 import pandas as pd
