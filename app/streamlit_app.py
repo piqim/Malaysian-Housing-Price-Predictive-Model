@@ -337,7 +337,7 @@ elif page == "💰 Price Analysis":
 # ============================================================================
 
 elif page == "📈 Feature Correlations":
-    st.markdown('<h1 class="main-header">📈 Correlations Analysis of Feature(s) in The MCHM with Price</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-header">📈 Correlations Analysis of Feature(s) in The MHM with Price</h1>', unsafe_allow_html=True)
     st.markdown("---")
     
     # Correlation Analysis
@@ -430,7 +430,7 @@ elif page == "📈 Feature Correlations":
 # ============================================================================
 
 elif page == "📑 Categorical Features":
-    st.markdown('<h1 class="main-header">📑 Analyzing Categorical Features of The MCMH</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-header">📑 Analyzing Categorical Features of The MHM</h1>', unsafe_allow_html=True)
     
     st.markdown("---")
 
