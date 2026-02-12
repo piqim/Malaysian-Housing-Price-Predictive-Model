@@ -30,18 +30,9 @@ st.set_page_config(
 st.markdown("""
     <style>
     .main-header {
-        font-size: 2.5rem;
-        font-weight: bold;
         color: #1f77b4;
-        text-align: center;
+        text-align: left;
         padding: 1rem 0;
-    }
-    .sub-header {
-        font-size: 1.8rem;
-        font-weight: bold;
-        color: #2c3e50;
-        margin-top: 2rem;
-        margin-bottom: 1rem;
     }
     .metric-container {
         background-color: #f0f2f6;
@@ -123,9 +114,11 @@ df = data['main']
 # SIDEBAR NAVIGATION
 # ============================================================================
 
-st.sidebar.markdown("# 🏢 Navigation")
+st.sidebar.markdown("# ⏩ Navigation Menu")
+st.sidebar.markdown("Use the menu below to explore the analysis results.")
 st.sidebar.markdown("---")
 
+st.sidebar.markdown("## 📂 Sections")
 page = st.sidebar.radio(
     "Choose a section:",
     [
@@ -139,24 +132,15 @@ page = st.sidebar.radio(
 )
 
 st.sidebar.markdown("---")
-st.sidebar.markdown("### 📁 Dataset Info")
-st.sidebar.metric("Total Properties", f"{len(df):,}")
-st.sidebar.metric("Features", f"{len(df.columns)}")
-
-if data['metadata'] is not None:
-    meta = data['metadata']
-    st.sidebar.metric("Numerical Features", int(meta['Numerical_Features'].values[0]))
-    st.sidebar.metric("Categorical Features", int(meta['Categorical_Features'].values[0]))
-
-st.sidebar.markdown("---")
+st.sidebar.markdown("## ℹ️ About This Dashboard")
+st.sidebar.markdown("This interactive dashboard presents the results of a descriptive analysis of Malaysian condominium prices. Explore key statistics, visualizations, and detailed reports to understand market trends and price drivers.")
 
 # ============================================================================
 # PAGE 1: OVERVIEW
 # ============================================================================
 
 if page == "📊 Overview":
-    st.markdown('<p class="main-header">🏢 Malaysian Condominium Price Analysis</p>', unsafe_allow_html=True)
-    st.markdown("### Comprehensive Descriptive Analysis Dashboard")
+    st.markdown('<h1 class="main-header">🔎 Overview of The Malaysian Condominium Housing Market (MCHM)</h1>', unsafe_allow_html=True)
     
     st.markdown("---")
     
@@ -204,35 +188,39 @@ if page == "📊 Overview":
         image = Image.open('reports/figures/01_price_univariate.png')
         st.image(image, use_container_width=True)
     
-    # Key Insights
-    st.markdown('<div class="insight-box">', unsafe_allow_html=True)
-    st.markdown("### 💡 Key Insights")
     
     skewness = df['price'].skew()
-    if skewness > 1:
-        st.write("📌 **Price Distribution**: Highly right-skewed - market has many luxury condominiums")
-    elif skewness > 0.5:
-        st.write("📌 **Price Distribution**: Moderately right-skewed - some high-end properties")
-    else:
-        st.write("📌 **Price Distribution**: Fairly symmetric distribution")
-    
-    st.write(f"📌 **Price Range**: RM {df['price'].min():,.0f} to RM {df['price'].max():,.0f}")
-    st.write(f"📌 **Standard Deviation**: RM {df['price'].std():,.0f}")
-    st.write(f"📌 **Skewness**: {skewness:.2f}")
-    st.write(f"📌 **Kurtosis**: {df['price'].kurtosis():.2f}")
-    st.markdown('</div>', unsafe_allow_html=True)
-    
+    col1, col2 = st.columns(2)
+
+    # Key Insights
+    with col1:
+        st.markdown("#### 💡 Insight(s)")
+        st.write(f"➡️ **Prices are heavily right-skewed**: Most condos cluster in the lower price range, while a small number go very high.This means the market is dominated by affordable-to-mid-range units, with luxury units forming a long tail ")
+        st.write(f"➡️ **High Kurtosis Value - Many Outliers - Strong Price Inequality in the Market**: This suggests a segmented market (mass-housing vs premium developments).")
+        st.write(f"➡️ **Log Scale of Price Distribution is Roughly Bell-Shaped**: Condo prices grow multiplicatively (location, size, and facilities multiply value)")
+
+    # key variables
+    with col2:
+        st.markdown("#### ‼️ Key Variable(s)")
+        st.write(f"📌 **Price Range**: RM {df['price'].min():,.0f} to RM {df['price'].max():,.0f}")
+        st.write(f"📌 **Standard Deviation**: RM {df['price'].std():,.0f}")
+        st.write(f"📌 **Skewness**: {skewness:.2f}")
+        st.write(f"📌 **Kurtosis**: {df['price'].kurtosis():.2f}")
+
+    # Conclusion
+    st.markdown("#### 🎯 Conclusion ➡️ Economic Interpretation")
+    st.write(f"Most Malaysians are buying in a relatively narrow low–mid range. Meaning a small high-end segment inflates market statistics. This pattern is typical of urban housing markets with income inequality, speculative investment and premium urban land scarcity (Kuala Lumpur, Penang, Johor Bahru)")
+
     st.markdown("---")
     
     # Dataset Summary
     if data['metadata'] is not None:
-        st.markdown("## 📋 Analysis Summary")
+        st.markdown("### 📋 Analysis Summary")
         meta = data['metadata']
         
         col1, col2 = st.columns(2)
         
         with col1:
-            st.write(f"**Analysis Date**: {meta['Analysis_Date'].values[0]}")
             st.write(f"**Total Records**: {int(meta['Total_Records'].values[0]):,}")
             st.write(f"**Total Features**: {int(meta['Total_Features'].values[0])}")
             st.write(f"**Numerical Features**: {int(meta['Numerical_Features'].values[0])}")
@@ -247,7 +235,8 @@ if page == "📊 Overview":
     st.markdown("---")
     
     # Quick Data Preview
-    st.markdown("## 📋 Data Preview")
+    st.markdown("### 📋 Quick Data Preview")
+    st.write(f"Preview of up to the first 10 data")
     st.dataframe(df.head(10), use_container_width=True)
 
 # ============================================================================
@@ -255,26 +244,22 @@ if page == "📊 Overview":
 # ============================================================================
 
 elif page == "💰 Price Analysis":
-    st.markdown('<p class="main-header">💰 Price Analysis</p>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-header">💰 Price Analysis of The MCHM</h1>', unsafe_allow_html=True)
+    st.markdown("---")
     
     # Detailed Price Statistics
-    st.markdown("## 📊 Detailed Price Statistics")
+    st.markdown("### 🪙 Detailed Price Statistics")
+    st.write(f"This table highlights some key interpretation(s) of the metrics in the analysis")
     
     if data['price_detailed'] is not None:
         st.dataframe(data['price_detailed'], use_container_width=True)
         
-        # Highlight key interpretations
-        st.markdown('<div class="insight-box">', unsafe_allow_html=True)
-        st.markdown("### 🎯 Interpretations")
-        for idx, row in data['price_detailed'].iterrows():
-            if row['Metric'] in ['Skewness', 'Kurtosis', 'IQR']:
-                st.write(f"**{row['Metric']}**: {row['Interpretation']}")
-        st.markdown('</div>', unsafe_allow_html=True)
     
     st.markdown("---")
     
     # Price Distribution Visualizations
-    st.markdown("## 📈 Price Distribution")
+    st.markdown("### 📈 A Look Into Price Distribution")
+    st.write(f"The histogram and box plot indicate that condominium prices in the Malaysian housing market are strongly right-skewed, with most transactions concentrated in a relatively narrow low-to-mid price range and a small number of very high-priced units forming a long upper tail. The mean exceeding the median reflects the disproportionate influence of luxury properties, implying that the average price is not representative of the typical condominium and that the market is segmented into a dominant mass-market segment and a smaller premium segment. Methodologically, this skewness suggests that median-based measures and log-transformed prices are more appropriate for analysis than raw means. Substantively, the pattern implies that increases in average prices may be driven by high-end developments rather than broad-based affordability deterioration.")
     
     col1, col2 = st.columns(2)
     
@@ -284,7 +269,7 @@ elif page == "💰 Price Analysis":
             df, 
             x='price', 
             nbins=50,
-            title='Price Distribution',
+            title='Price Distribution Histogram',
             labels={'price': 'Price (RM)', 'count': 'Frequency'}
         )
         fig.add_vline(x=df['price'].mean(), line_dash="dash", line_color="red", 
@@ -304,18 +289,57 @@ elif page == "💰 Price Analysis":
         st.plotly_chart(fig, use_container_width=True)
     
     # Saved visualizations
-    st.markdown("## 📊 Price vs Numerical Features")
-    
+    st.markdown("### 📊 Analysis on Price vs Numerical Features")
+
+    # concluding overall interpretation
+    st.write("**Overall Interpretation:**")
+    st.write("➡️ Structural attributes such as size, bedrooms, and bathrooms show positive relationships with price but do not fully explain its variation.")
+    st.write("➡️ Temporal and project-level features reveal a market preference for newer and less dense developments.")
+    st.write("➡️ The combined patterns indicate a segmented condominium market shaped by both physical attributes and broader urban and socioeconomic factors.")
+
     if os.path.exists('reports/figures/03_price_vs_numerical.png'):
         image = Image.open('reports/figures/03_price_vs_numerical.png')
         st.image(image, use_container_width=True)
+
+    # Interpretation of the multivariate analysis
+    st.write("**Detailed Interpretation:**")
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.write("**1) Price vs Property Size**")
+        st.write("➡️ There is a clear positive relationship between property size and price, indicating that larger units generally command higher prices.")
+        st.write("➡️ Price dispersion increases for larger properties, suggesting that size interacts with factors such as location and quality.")
+        st.write("➡️ Extreme high-price observations likely correspond to large premium or luxury units rather than a purely linear size–price relationship.")
+        st.write("**4) Price vs Completion Year**")
+        st.write("➡️ Prices show a gradual upward trend for more recently completed developments, suggesting a premium for newer properties.")
+        st.write("➡️ Older properties are more concentrated in lower price ranges, consistent with depreciation and outdated building standards.")
+        st.write("➡️ High-price observations among newer units indicate strong market preference for modern facilities and contemporary design.")
+    with col2:
+        st.write("**2) Price vs Bedroom**")
+        st.write("➡️ Prices tend to rise with the number of bedrooms, showing that room count is an important determinant of value.")
+        st.write("➡️ Substantial variation within each bedroom category suggests that bedroom count alone does not fully explain price differences.")
+        st.write("➡️ Units with more bedrooms are more prevalent among high-priced observations, indicating association with upper-market segments.")
+        st.write("**5) Price vs Number of Floors**")
+        st.write("➡️ The relationship between price and number of floors is weakly positive, indicating that building height alone does not strongly determine unit price.")
+        st.write("➡️ Most observations cluster at relatively low floor counts, while taller buildings exhibit wide price variation.")
+        st.write("➡️ This suggests that internal unit characteristics and location matter more than total building height.")
+    with col3:
+        st.write("**3) Price vs Bathroom**")
+        st.write("➡️ A positive association exists between the number of bathrooms and price, reflecting higher valuation for increased internal amenities.")
+        st.write("➡️ Wide dispersion at each bathroom level implies strong influence from non-structural factors such as location and building quality.")
+        st.write("➡️ Units with more bathrooms tend to cluster at higher price levels, signaling a link to luxury or family-oriented properties.")
+        st.write("**6) Price vs Total Units**")
+        st.write("➡️ A weak negative relationship is observed, with developments containing more units tending to have lower average prices.")
+        st.write("➡️ High-density projects are associated with more affordable units, while low-density developments are more often high-priced.")
+        st.write("➡️ This reflects a trade-off between scale and exclusivity, where scarcity of units is linked to higher valuation.")
+
 
 # ============================================================================
 # PAGE 3: FEATURE CORRELATIONS
 # ============================================================================
 
 elif page == "📈 Feature Correlations":
-    st.markdown('<p class="main-header">📈 Feature Correlations with Price</p>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-header">📈 Feature Correlations with Price</h1>', unsafe_allow_html=True)
+    st.markdown("---")
     
     # Correlation Analysis
     st.markdown("## 🔗 Detailed Correlation Analysis")
@@ -623,7 +647,7 @@ elif page == "📋 Full Reports":
 st.markdown("---")
 st.markdown("""
     <div style='text-align: center; color: gray; padding: 2rem;'>
-        <p>Malaysian Condominium Price Predictive Model | Descriptive Analysis Dashboard</p>
-        <p>Built with Streamlit 🎈 | Data Analysis with Python 🐍</p>
+        <p>Developed and Analyzed By <a href="https://github.com/piqim" target="_blank" style="font-weight: bold; text-decoration: none; color: inherit;">Mustaqim Burhanuddin</a></p>
+        <p>Built with Python Streamlit & Pandas</p>
     </div>
     """, unsafe_allow_html=True)
