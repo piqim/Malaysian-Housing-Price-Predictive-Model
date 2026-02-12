@@ -1,5 +1,8 @@
 # 🏢 Malaysian Condominium Price Predictive Model
-Link: https://piqim.github.io/Malaysian-Condominium-Price-Predictive-Model/
+Main Application: https://piqim.github.io/Malaysian-Condominium-Price-Predictive-Model/
+Analysis Streamlit Application: https://mycopr2.streamlit.app/
+Machine Learning Predictive Model Application: **WIP
+
 ---
 
 ## 📋 Table of Contents
