@@ -332,32 +332,39 @@ elif page == "💰 Price Analysis":
         st.write("➡️ High-density projects are associated with more affordable units, while low-density developments are more often high-priced.")
         st.write("➡️ This reflects a trade-off between scale and exclusivity, where scarcity of units is linked to higher valuation.")
 
-
 # ============================================================================
 # PAGE 3: FEATURE CORRELATIONS
 # ============================================================================
 
 elif page == "📈 Feature Correlations":
-    st.markdown('<h1 class="main-header">📈 Feature Correlations with Price</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-header">📈 Correlations Analysis of Feature(s) in The MCHM with Price</h1>', unsafe_allow_html=True)
     st.markdown("---")
     
     # Correlation Analysis
-    st.markdown("## 🔗 Detailed Correlation Analysis")
-    
+    st.markdown("### 🔗 Detailed Correlation Analysis")
+    st.write(f"This table highlights some key interpretation(s) of the metrics in the analysis")
+
     if data['correlations'] is not None:
         # Display correlation table
         st.dataframe(
             data['correlations'].sort_values('Abs_Correlation', ascending=False),
             use_container_width=True
         )
-        
+
+        # Interpretation of the correlation analysis in the table
+        st.write("**Interpretation of The Correlation Analysis:**")
+        st.write("➡️ Several features show strong positive correlations with price, particularly those related to property size, number of bedrooms and bathrooms, and newer completion years.")
+        st.write("➡️ Some features exhibit weak or negligible correlations, suggesting they may not be significant price drivers in the market.")
+
+        st.markdown("---")
+
+        st.markdown("### 📊 Correlation Strength Visualization")
         # Bar chart of correlations
         fig = px.bar(
             data['correlations'].sort_values('Correlation', ascending=False),
             x='Correlation',
             y='Feature',
             orientation='h',
-            title='Feature Correlations with Price',
             color='Correlation',
             color_continuous_scale='RdYlGn',
             color_continuous_midpoint=0,
@@ -367,17 +374,16 @@ elif page == "📈 Feature Correlations":
         st.plotly_chart(fig, use_container_width=True)
         
         # Key insights
-        st.markdown('<div class="insight-box">', unsafe_allow_html=True)
-        st.markdown("### 💡 Top Predictive Features")
+        st.markdown("#### 💡 The Highlighted Predictive Features")
+        st.warning("The following features have the strongest correlation with price and are likely to be the most important predictors:")
         top_features = data['correlations'].nlargest(5, 'Abs_Correlation')
         for idx, row in top_features.iterrows():
             st.write(f"**{row['Feature']}**: {row['Interpretation']} (Correlation: {row['Correlation']:.3f})")
-        st.markdown('</div>', unsafe_allow_html=True)
     
     st.markdown("---")
     
     # Numerical Features
-    st.markdown("## 📊 Numerical Features Distribution")
+    st.markdown("### 📊 Numerical Features Distribution")
     
     if os.path.exists('reports/figures/02_numerical_features.png'):
         image = Image.open('reports/figures/02_numerical_features.png')
@@ -387,44 +393,64 @@ elif page == "📈 Feature Correlations":
         with st.expander("📋 View Detailed Numerical Features Statistics"):
             st.dataframe(data['numerical_detailed'], use_container_width=True)
     
+    st.write("**Interpretation of Numerical Features Distribution:**")
+    st.write("The distribution of numerical features such as property size, number of bedrooms, and completion year shows significant variation, with some features exhibiting skewness or outliers that may influence their relationship with price.")
+    st.write("➡️ Overall, the features show a strong positive correlation with price.")
+    st.write("➡️ The right skewness in features like property size and number of bedrooms suggests that while most units are smaller and more affordable, there is a tail of larger, more expensive properties that drive up the average values.")
+    st.write("➡️ The distribution of completion years indicates a market preference for newer developments, which may command higher prices due to modern amenities and design.")
+
     st.markdown("---")
     
     # Multicollinearity Check
-    st.markdown("## ⚠️ Multicollinearity Detection")
+    st.markdown("### ⚠️ Multicollinearity Detection")
     
     if data['multicollinearity'] is not None and len(data['multicollinearity']) > 0:
-        st.markdown('<div class="warning-box">', unsafe_allow_html=True)
-        st.write("**Features with high correlation detected (potential multicollinearity):**")
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.warning("**Features with high correlation detected (potential multicollinearity):**")
         
         st.dataframe(data['multicollinearity'], use_container_width=True)
     else:
         st.success("✅ No significant multicollinearity detected!")
     
     # Correlation Heatmap
-    st.markdown("## 🔥 Correlation Heatmap")
+    st.markdown("### 🔥 Correlation Heatmap")
     
     if os.path.exists('reports/figures/06_correlation_heatmap.png'):
         image = Image.open('reports/figures/06_correlation_heatmap.png')
         st.image(image, use_container_width=True)
+
+    st.write("**Interpretation of Correlation Heatmap and Multicollinearity:**")
+    st.write("The correlation heatmap reveals clusters of features that are strongly correlated with each other, indicating potential multicollinearity. For example, features related to property size and number of bedrooms may show high intercorrelation, suggesting they capture similar underlying information about the property. The heatmap also highlights which features have the strongest correlations with price, guiding the focus for further analysis and model development.")
+    st.write("➡️ **Strongest Price Drivers**: Property Size (0.62) and Bathroom (0.58) show the strongest positive correlations with price, suggesting these are the most important numerical predictors of property value. Bedroom count has a weaker correlation (0.36), which is interesting since bathrooms appear more valuable than bedrooms.")
+    st.write("➡️ **Property Characteristics Cluster**: The features Bedroom, Bathroom, and Property Size form a tight correlation cluster (0.51-0.63 among themselves), which makes intuitive sense - larger properties naturally accommodate more rooms.")
+    st.write("➡️ **Parking Premium(s)**: Parking Lot shows a notable correlation with price (0.39) and is positively associated with newer buildings (Completion Year: 0.35) and larger properties. This suggests parking is a valued amenity, particularly in newer developments.")
+    st.write("**Counterintuitive Findings**: Total Units shows a slight negative correlation with price (-0.11) and with bedroom/bathroom counts. This suggests that properties in larger complexes may actually be less expensive per unit, possibly due to smaller individual unit sizes or different market segments.")
 
 # ============================================================================
 # PAGE 4: CATEGORICAL FEATURES
 # ============================================================================
 
 elif page == "📑 Categorical Features":
-    st.markdown('<p class="main-header">📑 Categorical Features Analysis</p>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-header">📑 Analyzing Categorical Features of The MCMH</h1>', unsafe_allow_html=True)
     
-    st.markdown("## 📊 Price by Categories")
-    
+    st.markdown("---")
+
+    st.markdown("### 📊 Price by Categories")
+    st.write(f"The series of box-plots highlights some key interpretation(s) of the categories in the analysis")
+
     if os.path.exists('reports/figures/04_price_vs_categorical.png'):
         image = Image.open('reports/figures/04_price_vs_categorical.png')
         st.image(image, use_container_width=True)
+
+    st.write("**Interpretation of Price by Categories:**")
+    st.write("➡️ **Property Type**: Condominiums and apartments show similar price distributions, while serviced apartments tend to be more expensive on average, likely due to their premium amenities and target market.")
+    st.write("➡️ **Tenure Type**: Freehold properties generally command higher prices than leasehold ones, reflecting the greater long-term value and security associated with freehold ownership.")
+    st.write("➡️ **Location**: Properties located in Kuala Lumpur and Penang exhibit higher price distributions compared to those in Johor Bahru, indicating stronger demand and higher land values in these urban centers.")
+    st.write("Surprisingly, the land title type (Bumi Lot vs Non-Bumi Lot) does not show a significant difference in price distribution, suggesting that other factors such as location and property type may have a stronger influence on price than land title in the Malaysian condominium market.")
     
     st.markdown("---")
     
     # Detailed categorical analysis
-    st.markdown("## 📋 Detailed Category Analysis")
+    st.markdown("### 📋 Detailed Category Analysis")
     
     if data['categorical'] is not None:
         # Filter selector
@@ -454,25 +480,25 @@ elif page == "📑 Categorical Features":
         st.plotly_chart(fig, use_container_width=True)
         
         # Insights
-        st.markdown('<div class="insight-box">', unsafe_allow_html=True)
         st.markdown(f"### 💡 Insights for {selected_feature}")
         
         highest = filtered_cat.nlargest(1, 'Median_Price').iloc[0]
         lowest = filtered_cat.nsmallest(1, 'Median_Price').iloc[0]
         
         st.write(f"**Highest Price**: {highest['Category']} - RM {highest['Median_Price']:,.0f}")
-        st.write(f"  ↳ {highest['Interpretation']}")
+        st.write(f"  ➡️ {highest['Interpretation']}")
         st.write(f"**Lowest Price**: {lowest['Category']} - RM {lowest['Median_Price']:,.0f}")
-        st.write(f"  ↳ {lowest['Interpretation']}")
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.write(f"  ➡️ {lowest['Interpretation']}")
     
     st.markdown("---")
     
     # Grouped Analysis
-    st.markdown("## 🔀 Combined Feature Analysis")
+    st.markdown("### 🔀 Combined Feature Analysis")
+    st.write(f"This analysis explores the interaction between Property Type and Tenure Type to understand how these combined categories influence price.")
     
     if data['grouped_analysis'] is not None:
-        st.markdown("### Property Type × Tenure Type Analysis")
+        st.markdown("#### Property Type × Tenure Type Analysis")
+        st.write("The table below shows the median price for each combination of property type and tenure type, along with the percentage difference from the overall median price. This allows us to identify which combinations are associated with higher or lower prices compared to the market average.")
         st.dataframe(data['grouped_analysis'], use_container_width=True)
         
         # Heatmap
@@ -493,15 +519,23 @@ elif page == "📑 Categorical Features":
         fig.update_xaxes(side="top")
         st.plotly_chart(fig, use_container_width=True)
 
+        st.write("**Insights from Combined Feature Analysis:**")
+        st.write("➡️ **Serviced Apartments with Freehold Tenure**: This combination commands the highest median price, indicating a strong market preference for premium properties that offer both high-end amenities and long-term ownership security.")
+        st.write("➡️ **Condominiums with Leasehold Tenure**: This combination has the lowest median price, suggesting that the lack of ownership security and potentially fewer amenities make these properties less desirable in the market.")
+        st.write("➡️ **Overall Trend**: Freehold properties consistently show higher median prices across all property types, reinforcing the importance of tenure security in driving property values. Additionally, serviced apartments tend to be more expensive than condominiums and apartments, regardless of tenure, highlighting the value placed on premium amenities and services in the Malaysian condominium market.")
+
 # ============================================================================
 # PAGE 5: AMENITY & FACILITIES
 # ============================================================================
 
 elif page == "🏪 Amenity & Facilities":
-    st.markdown('<p class="main-header">🏪 Amenity & Facilities Impact</p>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-header">🏪 Impact of Type of Amenities & Number of Facilities on Price</h1>', unsafe_allow_html=True)
     
+    st.markdown("---")
+
     # Amenity Impact
-    st.markdown("## 📊 Amenity Impact on Price")
+    st.markdown("### 📊 Amenity Impact on Price")
+    st.write(f"This analysis evaluates how the presence of specific amenities influences condominium prices compared to the overall market median price.")
     
     if data['amenities'] is not None and len(data['amenities']) > 0:
         # Display amenity table
@@ -523,33 +557,33 @@ elif page == "🏪 Amenity & Facilities":
         st.plotly_chart(fig, use_container_width=True)
         
         # Insights
-        st.markdown('<div class="insight-box">', unsafe_allow_html=True)
-        st.markdown("### 💡 Amenity Insights")
+        st.markdown("#### 💡 Key Takeaways from Amenities vs. Price")
         
         positive = data['amenities'][data['amenities']['Difference (%)'] > 0].sort_values('Difference (%)', ascending=False)
         if len(positive) > 0:
             st.write("**Most Valuable Amenities:**")
             for idx, row in positive.head(3).iterrows():
-                st.write(f"• **{row['Amenity']}**: +{row['Difference (%)']:.1f}% price increase")
+                st.write(f"➡️ **{row['Amenity']}**: +{row['Difference (%)']:.1f}% price increase")
         
         negative = data['amenities'][data['amenities']['Difference (%)'] < 0].sort_values('Difference (%)')
         if len(negative) > 0:
+            st.write("The findings are quite counterintuitive, as some amenities are associated with lower prices. This could be due to various factors such as the quality of the amenity, its maintenance, or its relevance to buyers. For example, an amenity that is poorly maintained or not highly valued by buyers may actually detract from the property's appeal, leading to a price decrease.")
             st.write("\n**Amenities Associated with Lower Prices:**")
             for idx, row in negative.head(3).iterrows():
-                st.write(f"• **{row['Amenity']}**: {row['Difference (%)']:.1f}% price decrease")
-        
-        st.markdown('</div>', unsafe_allow_html=True)
-    
-    # Saved visualization
-    if os.path.exists('reports/figures/05_amenity_impact.png'):
-        st.markdown("### 📊 Amenity Impact Visualization")
-        image = Image.open('reports/figures/05_amenity_impact.png')
-        st.image(image, use_container_width=True)
+                st.write(f"➡️ **{row['Amenity']}**: {row['Difference (%)']:.1f}% price decrease")
+            
+            # more takeaways
+            st.write("This suggests proximity to public amenities is NOT a universal value-add in this market. Instead, this appears to be a car-centric, suburban-preferring market where buyers are willing to pay premium for:")
+            st.write("➡️ Distance from urban congestionation and noise")
+            st.write("➡️ Larger property size and more internal amenities (bedrooms, bathrooms)")
+            st.write("➡️ Newer developments with modern design and facilities in less-dense area")
+            st.write("➡️ Privacy and exclusivity (fewer total units, freehold tenure)")
+            st.write("***Which is the case in most urban-centers in Malaysia, such as KL, Johor Bahru and Penang.***")
     
     st.markdown("---")
     
     # Facilities Analysis
-    st.markdown("## 🏗️ Number of Facilities Analysis")
+    st.markdown("### 🏗️ Analysis on Number of Facilities vs. Price")
     
     if data['facilities_summary'] is not None:
         # Summary
@@ -563,33 +597,33 @@ elif page == "🏪 Amenity & Facilities":
         with col3:
             st.metric("Avg Price Increase", f"RM {summary['Avg_Price_Increase_Per_Facility']:,.0f}")
         
-        st.markdown('<div class="insight-box">', unsafe_allow_html=True)
-        st.write(f"**Interpretation**: {summary['Interpretation']}")
-        st.write(f"**ML Recommendation**: {summary['ML_Recommendation']}")
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.warning(f"**Interpretation**: {summary['Interpretation']}")
     
     if data['facilities_detailed'] is not None:
-        st.markdown("### Detailed Facilities Breakdown")
+        st.markdown("#### Detailed Facilities Breakdown")
+        st.write("The table below provides a detailed breakdown of how the number of facilities in a condominium development impacts its price compared to the overall market median. It shows the average price increase associated with each additional facility, as well as the percentage difference from the overall median price.")
         st.dataframe(data['facilities_detailed'], use_container_width=True)
     
     # Facilities visualization
     if os.path.exists('reports/figures/05b_facilities_vs_price.png'):
-        st.markdown("### 📊 Facilities vs Price Visualization")
+        st.markdown("#### 📊 Number of Facilities vs Price Visualization")
         image = Image.open('reports/figures/05b_facilities_vs_price.png')
         st.image(image, use_container_width=True)
+
+        st.write("**Interpretation of Facilities vs Price Visualization:**")
+        st.write("The visualization illustrates a positive relationship between the number of facilities and condominium prices, indicating that properties with more facilities tend to command higher prices. However, the relationship is not perfectly linear, suggesting that while additional facilities generally add value, the specific types of facilities and their quality may also play a significant role in determining price. The presence of outliers with high prices despite fewer facilities suggests that other factors such as location, property size, and building quality can also significantly influence price, sometimes outweighing the impact of facilities alone.")
 
 # ============================================================================
 # PAGE 6: FULL REPORTS
 # ============================================================================
 
 elif page == "📋 Full Reports":
-    st.markdown('<p class="main-header">📋 Comprehensive Analysis Reports</p>', unsafe_allow_html=True)
-    
-    st.markdown("## 📊 Available Reports")
-    st.markdown("Select a report to view detailed analysis results.")
-    
+    st.markdown('<h1 class="main-header">📋 Comprehensive Analysis Reports</h1>', unsafe_allow_html=True)
+
     st.markdown("---")
     
+    st.markdown("### 📊 Available Reports")
+        
     # Report selector
     report_options = {
         "Price Detailed Analysis": 'price_detailed',
@@ -607,15 +641,16 @@ elif page == "📋 Full Reports":
     }
     
     selected_report = st.selectbox(
-        "Select Report",
+        "Select a Report to View and Download",
         list(report_options.keys())
     )
     
     # Display selected report
     report_key = report_options[selected_report]
+
     
     if data[report_key] is not None:
-        st.markdown(f"### {selected_report}")
+        st.markdown(f"### 📋 {selected_report}")
         st.dataframe(data[report_key], use_container_width=True)
         
         # Download button
@@ -628,17 +663,9 @@ elif page == "📋 Full Reports":
         )
     else:
         st.warning(f"Report not available: {selected_report}")
+
+    st.write("**Note:** The reports available for download are generated from the analysis and may contain detailed statistics, interpretations, and insights that can be used for further research, presentations, or decision-making related to the Malaysian condominium housing market.")
     
-    st.markdown("---")
-    
-    # Files location info
-    st.markdown("## 📁 File Locations")
-    st.info("""
-    All analysis files are stored in:
-    - **Visualizations**: `reports/figures/`
-    - **Data CSVs**: `data/processed/`
-    - **ML-Ready Data**: `data/final/house_model_ready.csv`
-    """)
 
 # ============================================================================
 # FOOTER
