@@ -1,395 +1,318 @@
 # 🏢 Malaysian Condominium Price Predictive Model
-Dataset: https://www.kaggle.com/datasets/mcpenguin/raw-malaysian-housing-prices-data/data
-Collaborative effort between Piqim (Analysis) and Eliot (ML and Predictive Model).
+Link: https://piqim.github.io/Malaysian-Condominium-Price-Predictive-Model/
+---
 
-Activate Venv:
+## 📋 Table of Contents
+
+- [Overview](#overview)
+- [Dataset](#dataset)
+- [Technologies Used](#technologies-used)
+- [Installation & Setup](#installation--setup)
+- [Usage Guide](#usage-guide)
+- [Project Phases](#project-phases)
+  - [Phase 1: Data Cleaning](#phase-1-data-cleaning)
+  - [Phase 2: Descriptive Analysis](#phase-2-descriptive-analysis)
+  - [Phase 3: Interactive Dashboard](#phase-3-interactive-dashboard)
+- [Future Work](#future-work)
+- [Contributors](#contributors)
+- [License](#license)
+
+---
+
+## 🎯 Overview
+
+This project analyzes **4,000+ Malaysian condominium listings** to uncover pricing patterns, feature relationships, and market insights. The analysis pipeline includes data cleaning, comprehensive statistical analysis, and an interactive Streamlit dashboard for data exploration.
+
+### Key Objectives:
+- Clean and standardize raw property data
+- Conduct univariate, bivariate, and multivariate analysis
+- Identify key price drivers and feature correlations
+- Assess amenity impacts on pricing
+- Provide ML-ready dataset for predictive modeling
+- Create interactive visualizations for stakeholder insights
+
+---
+
+## 📊 Dataset
+
+### Source
+The dataset used in this project contains Malaysian condominium listings scraped from property portals. => Dataset: https://www.kaggle.com/datasets/mcpenguin/raw-malaysian-housing-prices-data/data
+
+**Data Credit**: Original dataset mined and compiled from Malaysian real estate platforms. We acknowledge and thank the original data collectors for making this analysis possible.
+
+### Dataset Overview
+- **Total Records**: 4,000 properties
+- **Features**: 32 columns
+- **Target Variable**: `price` (RM)
+- **Time Period**: Current market listings (as of data collection)
+
+### Key Features:
+- **Numerical**: Property Size, Bedrooms, Bathrooms, Completion Year, Floors, Total Units, Parking
+- **Categorical**: Property Type, Tenure Type, Land Title, Category, Developer
+- **Location**: Address, Building Name
+- **Amenities**: Nearby School, Mall, Park, Hospital, Highway, Railway Station
+- **Facilities**: Building facilities (counted and analyzed)
+
+---
+
+## 🛠️ Technologies Used
+
+### Core Libraries:
+- **Python 3.8+** - Programming language
+- **Pandas** - Data manipulation and analysis
+- **NumPy** - Numerical computing
+- **Matplotlib** - Static visualizations
+- **Seaborn** - Statistical data visualization
+- **Plotly** - Interactive visualizations
+
+### Dashboard:
+- **Streamlit** - Interactive web dashboard
+
+### Development:
+- **VS Code** - IDE
+- **Git** - Version control
+
+---
+
+## 🚀 Installation & Setup
+
+### Prerequisites
+- Python 3.8 or higher
+- Git (optional)
+
+### Step 1: Clone or Download Repository
+
+```bash
+# Clone repository (if using Git)
+git clone https://github.com/yourusername/malaysian-condo-price-model.git
+cd malaysian-condo-price-model
+
+# Or download and extract ZIP file
+```
+
+### Step 2: Create Virtual Environment
+
+**Windows:**
+```bash
+python -m venv venv
 venv\Scripts\Activate.ps1
+```
 
-# Analysis CSV Files - Reference Guide (After Descriptive Analysis)
+**Mac/Linux:**
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
 
-## 📂 File Organization
+### Step 3: Install Dependencies
 
-All analysis CSV files are saved in `data/processed/` for easy access during model training.
+```bash
+pip install -r requirements.txt
+```
 
-**Total Files Generated:**
-- 7 Visualizations (PNG)
-- 4 Basic Summary CSVs
-- 13 Detailed Analysis CSVs
-- 1 ML-Ready Dataset
+**requirements.txt contents:**
+```txt
+pandas==2.1.4
+numpy==1.26.2
+matplotlib==3.8.2
+seaborn==0.13.0
+plotly==5.18.0
+scikit-learn==1.3.2
+streamlit==1.29.0
+openpyxl==3.1.2
+```
 
----
+### Step 4: Prepare Dataset
 
-## 🎯 ML-Ready Dataset
-
-### **house_model_ready.csv** (`data/final/`)
-- **Purpose**: Main dataset for machine learning
-- **Contents**: All cleaned data, ready for encoding and modeling
-- **Use For**: Training predictive models in Part 3
-- **Columns**: All original features after cleaning (no encoding applied yet)
-
----
-
-## 📊 Detailed Analysis Files (for ML Training)
-
-### **1. analysis_price_detailed.csv**
-**What it contains:**
-- Complete price statistics (mean, median, std, min, max, quartiles, IQR)
-- Skewness and kurtosis values
-- **Interpretations**: Text explanations of each metric
-- Distribution characteristics
-
-**Use for:**
-- Understanding target variable distribution
-- Deciding if price needs transformation (log/sqrt)
-- Setting price prediction ranges
-
-**Key columns:**
-- `Metric`: Statistical measure name
-- `Value`: Numerical value
-- `Interpretation`: Plain English explanation
+Place your `house.csv` file in the `data/raw/` directory.
 
 ---
 
-### **2. analysis_numerical_features_detailed.csv**
-**What it contains:**
-- Comprehensive stats for ALL numerical features
-- Distribution metrics (mean, median, mode, std, variance)
-- Skewness & kurtosis with interpretations
-- Outlier counts and percentages
-- Coefficient of variation
+## 📖 Usage Guide
 
-**Use for:**
-- Feature selection decisions
-- Identifying which features need transformation
-- Understanding data quality
-- Detecting outliers
+### Quick Start (3 Steps)
 
-**Key columns:**
-- `Feature`: Feature name
-- `Count`, `Missing`, `Missing_Pct`: Data completeness
-- `Skewness_Interpretation`: e.g., "Highly right-skewed"
-- `Kurtosis_Interpretation`: e.g., "Leptokurtic (heavy tails)"
-- `Outliers_Count`, `Outliers_Pct`: Outlier detection results
+```bash
+# 0.5 Activate venv: venv\Scripts\Activate.ps1
+
+# 1. Clean the data
+python src/data_cleaning.py
+
+# 2. Run descriptive analysis
+python src/descriptive_analysis.py
+
+# 3. Launch dashboard
+streamlit run app/streamlit_app.py
+```
+
+Your dashboard will open automatically at `http://localhost:8501`
 
 ---
 
-### **3. analysis_ml_feature_quality.csv**
-**What it contains:**
-- Quality assessment for each feature
-- ML recommendations for handling each feature
-- Transformation recommendations
-- Variance checks
+## 🔬 Project Phases
 
-**Use for:**
-- **Feature selection** - which features to keep/drop
-- **Preprocessing decisions** - which transformations to apply
-- **Imputation strategy** - how to handle missing values
+### Phase 1: Data Cleaning
 
-**Key columns:**
-- `Feature`: Feature name
-- `Missing_Pct`: Percentage of missing data
-- `Quality_Assessment`: "Good", "Fair", or "Poor"
-- `ML_Recommendation`: Specific advice (e.g., "Use robust imputation")
-- `Transformation_Recommendation`: "Apply log transformation" or "No transformation needed"
-- `Low_Variance_Flag`: Features with very low variance (may not be useful)
+**Script:** `src/data_cleaning.py`
 
----
+#### What it does:
+1. **Standardizes numeric fields** - Converts price (removes "RM", spaces), property size (removes "sq.ft"), etc.
+2. **Handles binary indicators** - Standardizes Yes/No values to 1/0
+3. **Cleans categorical features** - Formats text (Title case, strips whitespace)
+4. **Processes text columns** - Extracts facility counts, removes descriptions
+5. **Removes non-informative columns** - Drops Firm Number, REN Number, Ad List
+6. **Validates data** - Removes impossible values (negative prices, invalid years)
+7. **Imputes missing values** - Fills with median for numerical features
 
-### **4. analysis_correlations_detailed.csv**
-**What it contains:**
-- Correlation between each feature and price
-- Strength classification (Very Strong, Strong, Moderate, Weak)
-- Direction (Positive/Negative)
-- ML importance rating
-- R² and variance explained
+#### Output:
+- `data/processed/house_cleaned.csv` - Clean, standardized dataset
 
-**Use for:**
-- **Feature selection** - prioritize high correlation features
-- **Multicollinearity detection** - identify redundant features
-- **Feature importance ranking**
-
-**Key columns:**
-- `Feature`: Feature name
-- `Correlation`: Correlation coefficient with price
-- `Strength`: "Very Strong", "Strong", "Moderate", "Weak", "Very Weak"
-- `Direction`: "Positive" or "Negative"
-- `Interpretation`: Plain English explanation
-- `ML_Importance`: "High", "Medium", "Low", "Negligible"
-- `Variance_Explained_Pct`: How much of price variance this feature explains
+#### Key Statistics:
+- **Rows processed**: 4,000
+- **Columns cleaned**: 32 → 29 (after removing non-informative columns)
+- **Price format**: "RM 340 000" → 340000 (numeric)
+- **Binary features**: Standardized to 0/1
 
 ---
 
-### **5. analysis_categorical_features_detailed.csv**
-**What it contains:**
-- Price statistics for each category within each categorical feature
-- Count and percentage of each category
-- Price differences from overall median
+### Phase 2: Descriptive Analysis
 
-**Use for:**
-- Understanding which categories command higher/lower prices
-- Encoding decisions (one-hot vs label encoding)
-- Feature engineering opportunities
+**Script:** `src/descriptive_analysis.py`
 
-**Key columns:**
-- `Feature`: Feature name (e.g., "Tenure Type")
-- `Category`: Specific category (e.g., "Freehold")
-- `Count`, `Percentage`: How common this category is
-- `Mean_Price`, `Median_Price`: Average prices for this category
-- `Diff_from_Overall_Median_Pct`: % difference from overall median price
+#### Analysis Types:
 
----
+**1. Univariate Analysis**
+- Price distribution (mean, median, skewness, kurtosis)
+- Numerical feature distributions
+- Outlier detection using IQR method
+- Distribution interpretations
 
-### **6. analysis_amenity_impact_detailed.csv**
-**What it contains:**
-- Price impact of each amenity
-- Median prices with vs without amenity
-- Percentage difference
-- Impact level classification
-- ML recommendations
+**2. Bivariate Analysis**
+- Price vs numerical features (correlation, scatter plots)
+- Price vs categorical features (box plots, median comparisons)
+- Price vs amenities (impact percentage)
+- Number of facilities vs price
 
-**Use for:**
-- Understanding which amenities matter most
-- Feature selection for amenity features
-- Creating composite amenity scores
+**3. Multivariate Analysis**
+- Correlation matrix (all numerical features)
+- Multicollinearity detection
+- Property Type × Tenure Type analysis
+- Feature interaction effects
 
-**Key columns:**
-- `Amenity`: Amenity name
-- `With (Median)`, `Without (Median)`: Price comparison
-- `Difference (%)`: Percentage price impact
-- `Impact_Level`: "High", "Medium", "Low"
-- `Recommendation`: ML-specific advice
-- `Count_With`, `Count_Without`: Sample sizes
+#### Outputs:
 
----
+**7 Visualizations:**
+- `01_price_univariate.png` - Price distribution (histogram, box plot, log scale)
+- `02_numerical_features.png` - All numerical feature distributions
+- `03_price_vs_numerical.png` - Scatter plots with trend lines
+- `04_price_vs_categorical.png` - Box plots by categories
+- `05_amenity_impact.png` - Amenity price impact bar chart
+- `05b_facilities_vs_price.png` - Facilities correlation analysis
+- `06_correlation_heatmap.png` - Full correlation matrix
 
-### **7. analysis_facilities_detailed.csv**
-**What it contains:**
-- Price statistics by number of facilities
-- How prices change as facility count increases
-- Percentage differences from overall median
+**13 Detailed CSV Reports:**
+1. `analysis_price_detailed.csv` - Price statistics with interpretations
+2. `analysis_numerical_features_detailed.csv` - All numerical feature stats
+3. `analysis_ml_feature_quality.csv` - Feature quality assessment
+4. `analysis_correlations_detailed.csv` - Correlation strengths and ML importance
+5. `analysis_categorical_features_detailed.csv` - Category-level price analysis
+6. `analysis_amenity_impact_detailed.csv` - Amenity impact with recommendations
+7. `analysis_facilities_detailed.csv` - Facility count analysis
+8. `analysis_facilities_summary.csv` - Facilities correlation summary
+9. `analysis_correlation_matrix_full.csv` - Complete correlation matrix
+10. `analysis_multicollinearity.csv` - Highly correlated feature pairs
+11. `analysis_grouped_property_tenure.csv` - Combined feature analysis
+12. `analysis_ml_feature_summary.csv` - Master feature reference
+13. `analysis_metadata.csv` - Analysis metadata
 
-**Use for:**
-- Understanding facility impact on pricing
-- Creating facility-based features
-- Binning facilities into groups
-
-**Key columns:**
-- `Num_Facilities`: Number of facilities (0, 1, 2, 3, etc.)
-- `Property_Count`: How many properties have this many facilities
-- `Median_Price`: Median price for properties with this facility count
-- `Diff_from_Overall_Median_Pct`: % difference from overall median
-- `Interpretation`: Plain English explanation
+**ML-Ready Dataset:**
+- `data/final/house_model_ready.csv` - Cleaned data for modeling
 
 ---
 
-### **8. analysis_facilities_summary.csv**
-**What it contains:**
-- Overall correlation between facilities and price
-- Average price increase per additional facility
-- ML recommendation for feature importance
+### Phase 3: Interactive Dashboard
 
-**Use for:**
-- Quick reference on facility importance
-- Deciding if facilities should be a key feature
+**Script:** `app/streamlit_app.py`
 
-**Key columns:**
-- `Correlation`: Correlation coefficient with price
-- `Strength`: "Strong", "Moderate", or "Weak"
-- `Avg_Price_Increase_Per_Facility`: RM increase per facility
-- `ML_Recommendation`: Specific guidance
+#### Dashboard Pages:
 
----
+**1. 📊 Overview**
+- Key statistics and metrics
+- Price distribution overview
+- Dataset summary
+- Quick data preview
 
-### **9. analysis_correlation_matrix_full.csv**
-**What it contains:**
-- Complete correlation matrix of ALL numerical features
-- Every feature correlated with every other feature
+**2. 💰 Price Analysis**
+- Detailed price statistics with interpretations
+- Interactive price histograms
+- Box plots for outlier detection
+- Price vs numerical features
 
-**Use for:**
-- **Multicollinearity detection** - find redundant features
-- Understanding feature relationships
-- Creating interaction features
+**3. 📈 Feature Correlations**
+- Correlation table with ML importance ratings
+- Interactive correlation bar charts
+- Multicollinearity warnings
+- Full correlation heatmap
 
----
+**4. 📑 Categorical Features**
+- Interactive category selector
+- Dynamic price charts by category
+- Property Type × Tenure Type heatmap
+- Category insights (premium vs budget)
 
-### **10. analysis_multicollinearity.csv**
-**What it contains:**
-- Feature pairs with high correlation (>0.5)
-- Multicollinearity concern levels
-- Recommendations for handling
+**5. 🏪 Amenity & Facilities**
+- Amenity impact visualization
+- Facilities correlation analysis
+- Price increase per facility
+- High/medium/low impact levels
 
-**Use for:**
-- **Critical for ML** - identifies features that might cause problems
-- Deciding which features to drop
-- Avoiding model instability
-
-**Key columns:**
-- `Feature_1`, `Feature_2`: Correlated feature pair
-- `Correlation`: How strongly they're correlated
-- `Multicollinearity_Concern`: "High", "Moderate", "None"
-- `ML_Recommendation`: What to do about it
+**6. 📋 Full Reports**
+- Access all 13+ analysis CSVs
+- Download individual reports
+- View detailed statistics
 
 ---
 
-### **11. analysis_grouped_property_tenure.csv**
-**What it contains:**
-- Price analysis by Property Type AND Tenure Type combinations
-- Identifies most/least expensive combinations
+## 🔮 Future Work
 
-**Use for:**
-- Understanding interaction effects
-- Creating interaction features
-- Market segmentation
+### Phase 4: Predictive Modeling (In Progress)
+*To be completed by Eliot*
 
-**Key columns:**
-- `Property_Type`: Type of property
-- `Tenure_Type`: Tenure classification
-- `Median_Price`: Median for this combination
-- `Diff_from_Overall_Median_Pct`: How this combo compares to overall
+Planned features:
+- Feature engineering and encoding
+- Train multiple ML models (Linear Regression, Random Forest, XGBoost, etc.)
+- Hyperparameter tuning
+- Model evaluation and comparison
+- Price prediction API
+- Model deployment
 
 ---
 
-### **12. analysis_ml_feature_summary.csv** ⭐ MASTER FILE
-**What it contains:**
-- **COMPREHENSIVE OVERVIEW** of ALL features
-- Feature types, data types, missing values
-- Correlation with price
-- Preprocessing recommendations
-- ML readiness assessment
+## 👥 Contributors
 
-**Use for:**
-- **Master reference** for feature engineering
-- **Quick lookup** of feature characteristics
-- **Documentation** for your model
+### Data Analysis & Cleaning:
+- **Mustaqim Bin Burhanuddin** - Data cleaning, descriptive analysis, dashboard development
 
-**Key columns:**
-- `Feature_Name`: Feature name
-- `Feature_Type`: "Target", "Numerical", "Categorical"
-- `Missing_Pct`: Missing data percentage
-- `Correlation_with_Price`: How it relates to price
-- `Recommended_for_ML`: "Yes", "No", "Maybe"
-- `Preprocessing_Needed`: What to do before modeling
-- `Notes`: Specific guidance
+### Machine Learning (Upcoming):
+- **Eliot Boda** - Predictive modeling and deployment
+
+### Data Source:
+- Original dataset compiled from Malaysian property portals
+- Dataset: https://www.kaggle.com/datasets/mcpenguin/raw-malaysian-housing-prices-data/data
+- Credit to the original data miners and property listing platforms
 
 ---
 
-### **13. analysis_metadata.csv**
-**What it contains:**
-- Overall dataset summary
-- Analysis date
-- Feature counts by type
-- Correlation distribution
-- Recommended features count
+## 📄 License
 
-**Use for:**
-- Quick dataset overview
-- Documentation
-- Tracking analysis versions
+This project is for educational and analytical purposes. The dataset is used under fair use for academic research.
 
----
+**Note**: If you use this code or analysis, please:
+1. Credit the original data source
+2. Acknowledge this repository
+3. Not to be used for commercial purposes without permission
 
-## 📋 Summary Analysis Files (Simple - 4 files)
 
-### **summary_statistics.csv**
-- Basic overall statistics
-- Good for quick reference
+**Last Updated**: February 2026
 
-### **price_correlations.csv**
-- Simple correlation list
-- Feature → Correlation value
-
-### **numerical_features_summary.csv**
-- Basic stats for numerical features
-- Simplified version of detailed analysis
-
-### **amenity_impact.csv**
-- Simple amenity impact summary
-
----
-
-## 🎯 How to Use These Files for ML
-
-### **Phase 1: Feature Selection**
-1. Open `analysis_ml_feature_quality.csv`
-   - Keep features with `Quality_Assessment` = "Good" or "Fair"
-   - Drop features with >50% missing data
-   
-2. Open `analysis_correlations_detailed.csv`
-   - Prioritize features with `ML_Importance` = "High" or "Medium"
-   - Consider dropping features with correlation < 0.1
-
-3. Open `analysis_ml_feature_summary.csv`
-   - Use features where `Recommended_for_ML` = "Yes"
-
-### **Phase 2: Preprocessing**
-1. Open `analysis_ml_feature_quality.csv`
-   - Follow `Transformation_Recommendation` for each feature
-   - Apply log/sqrt transforms where suggested
-
-2. Open `analysis_multicollinearity.csv` ⭐ NEW
-   - Review feature pairs with high correlation
-   - Drop one feature from pairs with `Multicollinearity_Concern` = "High"
-   - Keep pairs where one feature is 'price' (these are good predictors)
-
-3. Open `analysis_categorical_features_detailed.csv`
-   - Decide encoding strategy based on unique value counts
-   - <10 categories → One-hot encoding
-   - \>10 categories → Label encoding or target encoding
-
-4. Open `analysis_numerical_features_detailed.csv`
-   - Handle outliers based on `Outliers_Count`
-   - Impute missing values based on distribution
-
-### **Phase 3: Feature Engineering**
-1. Open `analysis_amenity_impact_detailed.csv`
-   - Keep amenities with `Impact_Level` = "High" or "Medium"
-   - Create composite score: sum of high-impact amenities
-   
-2. Open `analysis_facilities_summary.csv` ⭐ NEW
-   - If correlation is strong (>0.3), keep as important feature
-   - Consider creating facility bins (0, 1-3, 4-6, 7-10, 10+)
-
-3. Open `analysis_correlations_detailed.csv`
-   - Create interaction features between high-correlation features
-   - Example: Property_Size × Bedrooms
-
-4. Open `analysis_grouped_property_tenure.csv` ⭐ NEW
-   - Create interaction features: Property_Type × Tenure_Type
-   - Or use this for market segmentation
-
-5. Open `analysis_price_detailed.csv`
-   - Consider binning price into categories if needed
-   - Apply transformation if skewness is high
-
----
-
-## 💡 Pro Tips
-
-1. **Start with `analysis_ml_feature_summary.csv`** - It's your master reference
-2. **Use detailed files for deep dives** - When you need to understand a specific feature
-3. **Cross-reference files** - Combine insights from multiple files
-4. **Document decisions** - Note which features you keep/drop and why
-5. **Version control** - These files track your analysis decisions
-
----
-
-## 🚀 Quick Checklist for ML Prep
-
-- [ ] Review `analysis_ml_feature_summary.csv` - understand all features
-- [ ] Check `analysis_ml_feature_quality.csv` - decide which features to keep
-- [ ] Review `analysis_correlations_detailed.csv` - prioritize important features
-- [ ] **Check `analysis_multicollinearity.csv`** - identify and remove redundant features
-- [ ] Check `analysis_price_detailed.csv` - decide if target needs transformation
-- [ ] Plan encoding strategy from `analysis_categorical_features_detailed.csv`
-- [ ] Review `analysis_facilities_summary.csv` - assess facility importance
-- [ ] Review `analysis_amenity_impact_detailed.csv` - select high-impact amenities
-- [ ] Check `analysis_grouped_property_tenure.csv` - consider interaction features
-- [ ] Use `house_model_ready.csv` for actual model training
-
----
-
-## 📞 Need Help?
-
-- All interpretations are in plain English
-- Recommendations are actionable
-- Files are ready to be read by pandas: `pd.read_csv('file.csv')`
+**Version**: 1.0.0 (Data Analysis Phase Complete)
