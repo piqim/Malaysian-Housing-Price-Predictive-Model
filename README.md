@@ -1,6 +1,6 @@
 # 🏢 Malaysian Housing Price Predictive Model
 - Main Application: https://piqim.github.io/Malaysian-Housing-Price-Predictive-Model/
-- Analysis Streamlit Application: https://mycopr2.streamlit.app/
+- Analysis Streamlit Application: https://myhopr2.streamlit.app/
 - Machine Learning Predictive Model Application: **WIP
 
 ---
