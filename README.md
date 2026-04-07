@@ -1,7 +1,7 @@
 # 🏢 Malaysian Housing Price Predictive Model
 - Main Application: https://piqim.github.io/Malaysian-Housing-Price-Predictive-Model/
 - Analysis Streamlit Application: https://myhopr2.streamlit.app/
-- Machine Learning Predictive Model Application: **WIP
+- Machine Learning Predictive Model Application: Deployment pending, run locally with `streamlit run app/ml_predict_app.py`
 
 ---
 
@@ -16,6 +16,8 @@ This project analyzes **4,000+ Malaysian housing listings** to uncover pricing p
 - Assess amenity impacts on pricing
 - Provide ML-ready dataset for predictive modeling
 - Create interactive visualizations for stakeholder insights
+- Train and compare regression models for price prediction
+- Deploy a separate Streamlit app for the final ML predictor
 
 ---
 
@@ -70,8 +72,8 @@ The dataset used in this project contains Malaysian housing listings scraped fro
 
 ```bash
 # Clone repository (if using Git)
-git clone https://github.com/yourusername/malaysian-condo-price-model.git
-cd malaysian-condo-price-model
+git clone https://github.com/piqim/Malaysian-Housing-Price-Predictive-Model.git
+cd Malaysian-Housing-Price-Predictive-Model
 
 # Or download and extract ZIP file
 ```
@@ -98,14 +100,17 @@ pip install -r requirements.txt
 
 **requirements.txt contents:**
 ```txt
-pandas==2.1.4
-numpy==1.26.2
-matplotlib==3.8.2
-seaborn==0.13.0
-plotly==5.18.0
-scikit-learn==1.3.2
-streamlit==1.29.0
-openpyxl==3.1.2
+pandas>=2.2.0
+numpy>=1.26.0
+matplotlib>=3.8.2
+seaborn>=0.13.0
+plotly>=5.18.0
+scikit-learn>=1.3.2
+lightgbm==4.6.0
+streamlit>=1.29.0
+joblib>=1.4.0
+openpyxl>=3.1.2
+Pillow>=11.0.0
 ```
 
 ### Step 4: Prepare Dataset
@@ -132,6 +137,22 @@ streamlit run app/streamlit_app.py
 ```
 
 Your dashboard will open automatically at `http://localhost:8501`
+
+### ML Prediction App
+
+Run the separate Streamlit app for the predictive model:
+
+```bash
+streamlit run app/ml_predict_app.py
+```
+
+### Retraining the Model
+
+Retrain the saved predictive-model artifacts and evaluation outputs:
+
+```bash
+python src/modeling/train.py
+```
 
 ---
 
@@ -259,18 +280,61 @@ Your dashboard will open automatically at `http://localhost:8501`
 
 ---
 
-## 🔮 Future Work
+### Phase 4: Predictive Modeling and ML App
 
-### Phase 4: Predictive Modeling (In Progress)
-*To be completed by Eliot*
+**Scripts:**
+- `src/modeling/train.py`
+- `src/modeling/predict.py`
+- `app/ml_predict_app.py`
 
-Planned features:
-- Feature engineering and encoding
-- Train multiple ML models (Linear Regression, Random Forest, XGBoost, etc.)
-- Hyperparameter tuning
-- Model evaluation and comparison
-- Price prediction API
-- Model deployment
+#### Current Status
+- Best current v1 model: `lightgbm`
+- Saved model artifact: `models/best_model.joblib`
+- Saved model metadata: `models/model_metadata.json`
+- Model comparison report: `reports/model/model_comparison.csv`
+- Test metrics report: `reports/model/test_metrics.json`
+- Reproducible split manifest: `reports/model/split_indices.csv`
+- Test-level predictions: `reports/model/test_predictions.csv`
+- Grouped error analysis: `reports/model/grouped_error_analysis.csv`
+- Error plots:
+  - `reports/model/residuals_vs_actual.png`
+  - `reports/model/predictions_vs_actual.png`
+
+#### What Part 5 Already Covers
+- Multiple regression models trained and compared
+- Best model selected and serialized for inference
+- Prediction helper module for single-row and batch inference
+- Test metrics saved for handover and app display
+
+#### What Still Remains
+- Publish the ML Streamlit app on Streamlit Community Cloud
+- Replace the temporary ML card link on the GitHub Pages site with the deployed Streamlit URL
+- Iterate on cross-validation and hyperparameter search if you want a stronger v2 model
+
+---
+
+## ML Predictive Model App
+
+The predictive-model app is intentionally separate from the descriptive-analysis dashboard.
+
+### Features
+- Input form generated from saved model metadata
+- Numeric bounds based on training-data ranges
+- Categorical dropdowns limited to allowed model values
+- Validation guardrails for invalid inference inputs
+- Predicted house price in RM
+- Inline display of saved test metrics
+
+### Local Run Command
+
+```bash
+streamlit run app/ml_predict_app.py
+```
+
+### Deployment Note
+- Deploy `app/ml_predict_app.py` on Streamlit Community Cloud from this repository.
+- After deployment, replace the temporary ML card link in `index.html` with the final Streamlit URL.
+- Until that URL exists, the website links to this repository guide instead of a fake deployment.
 
 ---
 
@@ -279,8 +343,8 @@ Planned features:
 ### Data Analysis & Cleaning:
 - **Mustaqim Bin Burhanuddin** - Data cleaning, descriptive analysis, dashboard development
 
-### Machine Learning (Upcoming):
-- **Eliot Boda** - Predictive modeling and deployment
+### Machine Learning:
+- **Eliot Boda** - Predictive modeling, inference app, and deployment handover
 
 ### Data Source:
 - Original dataset compiled from Malaysian property portals
@@ -299,6 +363,6 @@ This project is for educational and analytical purposes. The dataset is used und
 3. Not to be used for commercial purposes without permission
 
 
-**Last Updated**: February 2026
+**Last Updated**: April 7, 2026
 
-**Version**: 1.0.0 (Data Analysis Phase Complete)
+**Version**: 1.1.0 (Analysis Complete, ML App Local-Ready)

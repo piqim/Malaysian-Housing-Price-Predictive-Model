@@ -1,7 +1,10 @@
 {
+  "version": "v1",
+  "trained_at_utc": "2026-04-07T07:49:42.583212+00:00",
   "target": "price",
   "transform": "log1p",
   "best_model": "lightgbm",
+  "random_state": 42,
   "train_rows": 1385,
   "valid_rows": 297,
   "test_rows": 297,
@@ -150,5 +153,15 @@
     "mae": 80651.5373224782,
     "r2": 0.731975402697191,
     "median_abs_error": 45003.725008805515
+  },
+  "artifacts": {
+    "model_path": "models/best_model.joblib",
+    "comparison_path": "reports/model/model_comparison.csv",
+    "test_metrics_path": "reports/model/test_metrics.json",
+    "split_indices_path": "reports/model/split_indices.csv",
+    "test_predictions_path": "reports/model/test_predictions.csv",
+    "grouped_error_analysis_path": "reports/model/grouped_error_analysis.csv",
+    "residual_plot_path": "reports/model/residuals_vs_actual.png",
+    "prediction_plot_path": "reports/model/predictions_vs_actual.png"
   }
 }
