@@ -1,7 +1,7 @@
 # 🏢 Malaysian Housing Price Predictive Model
 - Main Application: https://piqim.github.io/Malaysian-Housing-Price-Predictive-Model/
 - Analysis Streamlit Application: https://myhopr2.streamlit.app/
-- Machine Learning Predictive Model Application: Deployment pending, run locally with `streamlit run app/ml_predict_app.py`
+- Machine Learning Predictive Model Application: https://myhopr2-mlapp.streamlit.app/
 
 ---
 
@@ -307,9 +307,8 @@ python src/modeling/train.py
 - Test metrics saved for handover and app display
 
 #### What Still Remains
-- Publish the ML Streamlit app on Streamlit Community Cloud
-- Replace the temporary ML card link on the GitHub Pages site with the deployed Streamlit URL
 - Iterate on cross-validation and hyperparameter search if you want a stronger v2 model
+- Add model explainability or prediction interval features in a future version if needed
 
 ---
 
@@ -332,9 +331,9 @@ streamlit run app/ml_predict_app.py
 ```
 
 ### Deployment Note
-- Deploy `app/ml_predict_app.py` on Streamlit Community Cloud from this repository.
-- After deployment, replace the temporary ML card link in `index.html` with the final Streamlit URL.
-- Until that URL exists, the website links to this repository guide instead of a fake deployment.
+- The ML predictor is deployed on Streamlit Community Cloud at `https://myhopr2-mlapp.streamlit.app/`.
+- The GitHub Pages landing page now links directly to the live ML app.
+- Local development still uses `streamlit run app/ml_predict_app.py`.
 
 ---
 
