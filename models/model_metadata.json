@@ -1,6 +1,6 @@
 {
   "version": "v1",
-  "trained_at_utc": "2026-04-07T07:49:42.583212+00:00",
+  "trained_at_utc": "2026-04-07T17:40:47.647155+00:00",
   "target": "price",
   "transform": "log1p",
   "best_model": "lightgbm",
